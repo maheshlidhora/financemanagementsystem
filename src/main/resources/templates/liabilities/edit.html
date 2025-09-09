@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit Liability</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+        <a class="navbar-brand" href="#">Finance Manager</a>
+        <div class="ms-auto">
+            <a th:href="@{/dashboard}" class="btn btn-outline-light btn-sm me-2">Dashboard</a>
+            <a th:href="@{/accounts}" class="btn btn-outline-light btn-sm me-2">Accounts</a>
+            <a th:href="@{/liabilities}" class="btn btn-outline-light btn-sm me-2">Liabilities</a>
+            <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Edit Liability</h2>
+            <a th:href="@{/liabilities/} + ${liability.id}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Details
+            </a>
+        </div>
+
+        <!-- Success/Error Messages -->
+        <div th:if="${param.success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${param.success}">Success message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${param.error}">Error message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Edit Form -->
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-pencil"></i> Edit Liability Information</h5>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/liabilities/edit/} + ${liability.id}" th:object="${liability}" method="post">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- Description -->
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description *</label>
+                                <input type="text" class="form-control" id="description" th:field="*{description}"
+                                    required>
+                            </div>
+
+                            <!-- Amount -->
+                            <div class="mb-3">
+                                <label for="amount" class="form-label">Total Amount *</label>
+                                <input type="number" class="form-control" id="amount" th:field="*{amount}" step="0.01"
+                                    min="0" required>
+                            </div>
+
+                            <!-- Outstanding Amount -->
+                            <div class="mb-3">
+                                <label for="outstandingAmount" class="form-label">Outstanding Amount *</label>
+                                <input type="number" class="form-control" id="outstandingAmount"
+                                    th:field="*{outstandingAmount}" step="0.01" min="0" required>
+                            </div>
+
+                            <!-- Due Date -->
+                            <div class="mb-3">
+                                <label for="dueDate" class="form-label">Due Date</label>
+                                <input type="date" class="form-control" id="dueDate" th:field="*{dueDate}">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <!-- Status -->
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Status *</label>
+                                <select class="form-select" id="status" th:field="*{status}" required>
+                                    <option
+                                        th:each="status : ${T(com.newrise.financemanagementsystem.entity.Liability.LiabilityStatus).values()}"
+                                        th:value="${status}" th:text="${status.name()}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- Account -->
+                            <div class="mb-3">
+                                <label for="account" class="form-label">Account</label>
+                                <select class="form-select" id="account" th:field="*{account}">
+                                    <option value="">-- Select Account --</option>
+                                    <option th:each="account : ${accounts}" th:value="${account.accountId}"
+                                        th:text="${account.accountName}"
+                                        th:selected="${liability.account != null and liability.account.accountId == account.accountId}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- Interest Rate -->
+                            <div class="mb-3">
+                                <label for="interestRate" class="form-label">Interest Rate (%)</label>
+                                <input type="number" class="form-control" id="interestRate" th:field="*{interestRate}"
+                                    step="0.01" min="0">
+                            </div>
+
+                            <!-- Notes -->
+                            <div class="mb-3">
+                                <label for="notes" class="form-label">Notes</label>
+                                <textarea class="form-control" id="notes" th:field="*{notes}" rows="3"
+                                    placeholder="Additional notes about this liability"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary me-md-2">
+                            <i class="bi bi-check-circle"></i> Update Liability
+                        </button>
+                        <a th:href="@{/liabilities/} + ${liability.id}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Expenses Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+        <a class="navbar-brand" href="#">Finance Manager</a>
+        <div class="ms-auto">
+            <a th:href="@{/dashboard}" class="btn btn-outline-light btn-sm me-2">Dashboard</a>
+            <a th:href="@{/accounts}" class="btn btn-outline-light btn-sm me-2">Accounts</a>
+            <a th:href="@{/expenses/create}" class="btn btn-outline-light btn-sm me-2">Add Expense</a>
+            <a th:href="@{/expenses/report}" class="btn btn-outline-light btn-sm me-2">Reports</a>
+            <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container mt-4">
+        <!-- Success/Error Messages -->
+        <div th:if="${param.success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${param.success}">Operation successful</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${param.error}">Error occurred</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2><i class="bi bi-receipt"></i> Expenses</h2>
+            <div>
+                <span class="badge bg-danger fs-6 me-3">
+                    Total: $<span th:text="${#numbers.formatDecimal(totalExpenses, 1, 2)}">0.00</span>
+                </span>
+                <a th:href="@{/expenses/create}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Add Expense
+                </a>
+            </div>
+        </div>
+
+        <!-- Expenses Table -->
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Amount</th>
+                        <th>Account</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="expense, iterStat : ${expenses}">
+                        <td th:text="${iterStat.count}">1</td>
+                        <td th:text="${#temporals.format(expense.expenseDate, 'yyyy-MM-dd')}">-</td>
+                        <td th:text="${expense.description}">-</td>
+                        <td>
+                            <span class="badge"
+                                th:classappend="${expense.category?.name} ? 'bg-secondary' : 'bg-warning'"
+                                th:text="${expense.category?.name} ?: 'Uncategorized'">
+                            </span>
+                        </td>
+                        <td class="text-danger fw-bold" th:text="'$' + ${#numbers.formatDecimal(expense.amount, 1, 2)}">
+                            $0.00</td>
+                        <td th:text="${expense.account?.accountName} ?: 'N/A'">-</td>
+                        <td>
+                            <a th:href="@{'/expenses/' + ${expense.expenseId}}" class="btn btn-sm btn-info me-1">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a th:href="@{'/expenses/edit/' + ${expense.expenseId}}"
+                                class="btn btn-sm btn-primary me-1">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a th:href="@{'/expenses/delete/' + ${expense.expenseId}}" class="btn btn-sm btn-danger"
+                                onclick="return confirm('Are you sure you want to delete this expense?');">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(expenses)}">
+                        <td colspan="7" class="text-center text-muted py-4">
+                            <i class="bi bi-receipt display-4 d-block mb-2"></i>
+                            No expenses recorded yet
+                            <div class="mt-2">
+                                <a th:href="@{/expenses/create}" class="btn btn-primary">Add Your First Expense</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

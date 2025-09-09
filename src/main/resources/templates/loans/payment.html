@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Make Loan Payment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+        <a class="navbar-brand" href="#">Finance Manager</a>
+        <div class="ms-auto">
+            <a th:href="@{/dashboard}" class="btn btn-outline-light btn-sm me-2">Dashboard</a>
+            <a th:href="@{/accounts}" class="btn btn-outline-light btn-sm me-2">Accounts</a>
+            <a th:href="@{/loans}" class="btn btn-outline-light btn-sm me-2">Loans</a>
+            <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Make Loan Payment</h2>
+            <a th:href="@{/loans/} + ${loan.loanId}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Loan
+            </a>
+        </div>
+
+        <!-- Success/Error Messages -->
+        <div th:if="${param.success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${#strings.replace(param.success, '+', ' ')}">Success message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${#strings.replace(param.error, '+', ' ')}">Error message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Loan Info Card -->
+        <div class="card shadow mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="bi bi-cash-coin"></i> Loan Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">Description:</dt>
+                            <dd class="col-sm-8" th:text="${loan.description}">-</dd>
+
+                            <dt class="col-sm-4">Principal Amount:</dt>
+                            <dd class="col-sm-8" th:text="'$' + ${#numbers.formatDecimal(loan.principalAmount, 1, 2)}">
+                                $0.00</dd>
+
+                            <dt class="col-sm-4">Outstanding:</dt>
+                            <dd class="col-sm-8">
+                                <strong class="text-danger"
+                                    th:text="'$' + ${#numbers.formatDecimal(loan.outstandingAmount, 1, 2)}">$0.00</strong>
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">Status:</dt>
+                            <dd class="col-sm-8">
+                                <span th:if="${loan.status.name() == 'ACTIVE'}" class="badge bg-primary">Active</span>
+                                <span th:if="${loan.status.name() == 'PARTIAL'}" class="badge bg-warning">Partial</span>
+                                <span th:if="${loan.status.name() == 'PAID'}" class="badge bg-success">Paid</span>
+                                <span th:if="${loan.status.name() == 'DEFAULTED'}"
+                                    class="badge bg-danger">Defaulted</span>
+                                <span th:if="${loan.status.name() == 'CLOSED'}" class="badge bg-secondary">Closed</span>
+                            </dd>
+
+                            <dt class="col-sm-4">Loan Type:</dt>
+                            <dd class="col-sm-8">
+                                <span th:if="${loan.isBorrowed}" class="badge bg-success">Borrowed</span>
+                                <span th:if="${!loan.isBorrowed}" class="badge bg-info">Given</span>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Form Card -->
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-cash"></i> Payment Details</h5>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/loans/payment/} + ${loan.loanId}" method="post">
+                    <!-- Account Selection -->
+                    <div class="mb-3">
+                        <label for="accountId" class="form-label">Select Account for Payment:</label>
+                        <select class="form-select" id="accountId" name="accountId" required>
+                            <option value="">-- Select Account --</option>
+                            <option th:each="account : ${accounts}" th:value="${account.accountId}"
+                                th:text="${account.accountName} + ' ($' + ${#numbers.formatDecimal(account.currentBalance, 1, 2)} + ')'">
+                            </option>
+                        </select>
+                        <div class="form-text">Select the account from which to make the payment</div>
+                    </div>
+
+                    <!-- Payment Amount -->
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Payment Amount:</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" id="amount" name="amount"
+                                th:attr="min=0.01, max=${loan.outstandingAmount}" step="0.01" required
+                                placeholder="Enter payment amount">
+                        </div>
+                        <div class="form-text">
+                            Maximum payment: $<span
+                                th:text="${#numbers.formatDecimal(loan.outstandingAmount, 1, 2)}">0.00</span>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a th:href="@{/loans/} + ${loan.loanId}" class="btn btn-secondary me-md-2">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-cash"></i> Process Payment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const amountInput = document.getElementById('amount');
+            const accountSelect = document.getElementById('accountId');
+            const maxAmount = parseFloat(amountInput.getAttribute('max'));
+
+            // Set max amount as placeholder
+            amountInput.setAttribute('placeholder', 'Enter amount up to $' + maxAmount.toFixed(2));
+
+            // Validate amount doesn't exceed outstanding balance
+            amountInput.addEventListener('change', function () {
+                const amount = parseFloat(this.value);
+                if (amount > maxAmount) {
+                    alert('Payment amount cannot exceed outstanding amount of $' + maxAmount.toFixed(2));
+                    this.value = maxAmount.toFixed(2);
+                }
+            });
+
+            // Show account balance when account is selected
+            accountSelect.addEventListener('change', function () {
+                const selectedOption = this.options[this.selectedIndex];
+                if (selectedOption.value) {
+                    const balanceText = selectedOption.text.split('$')[1].replace(')', '');
+                    const balance = parseFloat(balanceText);
+
+                    // Update amount max attribute based on account balance
+                    const newMax = Math.min(maxAmount, balance);
+                    amountInput.setAttribute('max', newMax);
+
+                    // Update help text
+                    const helpText = amountInput.nextElementSibling;
+                    helpText.textContent = 'Maximum payment: $' + newMax.toFixed(2);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Loan Reports</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        .chart-container {
+            position: relative;
+            height: 350px;
+            /* Fixed height for both charts */
+            width: 100%;
+            min-height: 350px;
+        }
+
+        .chart-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chart-card .card-body {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .chart-card canvas {
+            max-width: 100%;
+            max-height: 280px;
+            width: 100% !important;
+            height: auto !important;
+        }
+
+        /* Ensure cards in the same row have equal height */
+        .equal-height-row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .equal-height-row .col-md-6 {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+        <a class="navbar-brand" href="#">Finance Manager</a>
+        <div class="ms-auto">
+            <a th:href="@{/dashboard}" class="btn btn-outline-light btn-sm me-2">Dashboard</a>
+            <a th:href="@{/accounts}" class="btn btn-outline-light btn-sm me-2">Accounts</a>
+            <a th:href="@{/loans}" class="btn btn-outline-light btn-sm me-2">Loans</a>
+            <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Loan Reports</h2>
+            <a th:href="@{/loans}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Loans
+            </a>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Total Loans</h5>
+                        <h3 th:text="${totalLoans}">0</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Active Loans</h5>
+                        <h3 th:text="${activeLoans}">0</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Overdue Loans</h5>
+                        <h3 th:text="${overdueLoans}">0</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Paid Loans</h5>
+                        <h3 th:text="${paidLoans}">0</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section - UPDATED -->
+        <div class="row mb-4 equal-height-row">
+            <div class="col-md-6">
+                <div class="card shadow chart-card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-pie-chart"></i> Loan Distribution</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="loanTypeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow chart-card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Loan Status</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="loanStatusChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Reports -->
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="bi bi-table"></i> Loan Summary</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Category</th>
+                                <th>Count</th>
+                                <th>Total Amount</th>
+                                <th>Outstanding</th>
+                                <th>Average Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="report : ${loanReports}">
+                                <td th:text="${report.category}">-</td>
+                                <td th:text="${report.count}">0</td>
+                                <td th:text="'$' + ${#numbers.formatDecimal(report.totalAmount, 1, 2)}">$0.00</td>
+                                <td th:text="'$' + ${#numbers.formatDecimal(report.outstandingAmount, 1, 2)}">$0.00</td>
+                                <td th:text="'$' + ${#numbers.formatDecimal(report.averageAmount, 1, 2)}">$0.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("Chart initialization started...");
+
+            // Get data from Thymeleaf - use th:inline="javascript" syntax
+            const typeLabels = [[${ typeLabels }]];
+            const typeData = [[${ typeData }]];
+            const statusLabels = [[${ statusLabels }]];
+            const statusData = [[${ statusData }]];
+
+            console.log("Type Labels:", typeLabels);
+            console.log("Type Data:", typeData);
+            console.log("Status Labels:", statusLabels);
+            console.log("Status Data:", statusData);
+
+            // Common chart options for consistent sizing
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false, // This is important for equal sizing
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 15,
+                            padding: 15
+                        }
+                    }
+                }
+            };
+
+            // Define colors
+            const backgroundColors = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6c757d', '#17a2b8', '#6610f2'];
+
+            // Loan Type Chart - Pie Chart
+            const typeCtx = document.getElementById('loanTypeChart').getContext('2d');
+            if (typeLabels && typeLabels.length > 0 && typeData && typeData.length > 0) {
+                new Chart(typeCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: typeLabels,
+                        datasets: [{
+                            data: typeData,
+                            backgroundColor: backgroundColors.slice(0, typeLabels.length)
+                        }]
+                    },
+                    options: {
+                        ...commonOptions,
+                        plugins: {
+                            ...commonOptions.plugins,
+                            title: {
+                                display: true,
+                                text: 'Loan Distribution by Type',
+                                font: { size: 16 },
+                                padding: 20
+                            }
+                        }
+                    }
+                });
+            } else {
+                typeCtx.font = '16px Arial';
+                typeCtx.fillStyle = '#6c757d';
+                typeCtx.textAlign = 'center';
+                typeCtx.fillText('No loan type data available', 175, 175);
+                console.error("No type data available for chart");
+            }
+
+            // Loan Status Chart - Bar Chart
+            const statusCtx = document.getElementById('loanStatusChart').getContext('2d');
+            if (statusLabels && statusLabels.length > 0 && statusData && statusData.length > 0) {
+                new Chart(statusCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: statusLabels,
+                        datasets: [{
+                            label: 'Number of Loans',
+                            data: statusData,
+                            backgroundColor: '#28a745',
+                            borderColor: '#20a045',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        ...commonOptions,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Loans',
+                                    font: { size: 14 }
+                                },
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Loan Status',
+                                    font: { size: 14 }
+                                }
+                            }
+                        },
+                        plugins: {
+                            ...commonOptions.plugins,
+                            title: {
+                                display: true,
+                                text: 'Loans by Status',
+                                font: { size: 16 },
+                                padding: 20
+                            }
+                        }
+                    }
+                });
+            } else {
+                statusCtx.font = '16px Arial';
+                statusCtx.fillStyle = '#6c757d';
+                statusCtx.textAlign = 'center';
+                statusCtx.fillText('No loan status data available', 175, 175);
+                console.error("No status data available for chart");
+            }
+        });
+    </script>
+</body>
+
+</html>
