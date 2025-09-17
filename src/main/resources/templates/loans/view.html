@@ -58,12 +58,12 @@
                             <dd class="col-sm-8" th:text="${loan.description}">-</dd>
 
                             <dt class="col-sm-4">Principal Amount:</dt>
-                            <dd class="col-sm-8" th:text="'$' + ${#numbers.formatDecimal(loan.principalAmount, 1, 2)}">
+                            <dd class="col-sm-8" th:text="'₹' + ${#numbers.formatDecimal(loan.principalAmount, 1, 2)}">
                                 $0.00</dd>
 
                             <dt class="col-sm-4">Outstanding:</dt>
                             <dd class="col-sm-8"
-                                th:text="'$' + ${#numbers.formatDecimal(loan.outstandingAmount, 1, 2)}">$0.00</dd>
+                                th:text="'₹' + ${#numbers.formatDecimal(loan.outstandingAmount, 1, 2)}">$0.00</dd>
 
                             <dt class="col-sm-4">Loan Type:</dt>
                             <dd class="col-sm-8" th:text="${loan.type.name()}">-</dd>
@@ -116,7 +116,7 @@
             <div class="card-body">
                 <div th:if="${loan.outstandingAmount > 0}">
                     <p>Outstanding amount: <strong
-                            th:text="'$' + ${#numbers.formatDecimal(loan.outstandingAmount, 1, 2)}"></strong></p>
+                            th:text="'₹' + ${#numbers.formatDecimal(loan.outstandingAmount, 1, 2)}"></strong></p>
                     <a th:href="@{/loans/payment/} + ${loan.loanId}" class="btn btn-success">
                         <i class="bi bi-cash"></i> Make Payment
                     </a>

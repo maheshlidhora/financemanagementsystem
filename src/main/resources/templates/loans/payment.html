@@ -53,13 +53,13 @@
                             <dd class="col-sm-8" th:text="${loan.description}">-</dd>
 
                             <dt class="col-sm-4">Principal Amount:</dt>
-                            <dd class="col-sm-8" th:text="'$' + ${#numbers.formatDecimal(loan.principalAmount, 1, 2)}">
+                            <dd class="col-sm-8" th:text="'₹' + ${#numbers.formatDecimal(loan.principalAmount, 1, 2)}">
                                 $0.00</dd>
 
                             <dt class="col-sm-4">Outstanding:</dt>
                             <dd class="col-sm-8">
                                 <strong class="text-danger"
-                                    th:text="'$' + ${#numbers.formatDecimal(loan.outstandingAmount, 1, 2)}">$0.00</strong>
+                                    th:text="'₹' + ${#numbers.formatDecimal(loan.outstandingAmount, 1, 2)}">$0.00</strong>
                             </dd>
                         </dl>
                     </div>
@@ -157,7 +157,7 @@
             accountSelect.addEventListener('change', function () {
                 const selectedOption = this.options[this.selectedIndex];
                 if (selectedOption.value) {
-                    const balanceText = selectedOption.text.split('$')[1].replace(')', '');
+                    const balanceText = selectedOption.text.split('₹')[1].replace(')', '');
                     const balance = parseFloat(balanceText);
 
                     // Update amount max attribute based on account balance

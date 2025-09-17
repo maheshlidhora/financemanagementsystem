@@ -58,12 +58,12 @@
                             <dd class="col-sm-8" th:text="${liability.description}">-</dd>
 
                             <dt class="col-sm-4">Total Amount:</dt>
-                            <dd class="col-sm-8" th:text="'$' + ${#numbers.formatDecimal(liability.amount, 1, 2)}">$0.00
+                            <dd class="col-sm-8" th:text="'₹' + ${#numbers.formatDecimal(liability.amount, 1, 2)}">$0.00
                             </dd>
 
                             <dt class="col-sm-4">Outstanding:</dt>
                             <dd class="col-sm-8"
-                                th:text="'$' + ${#numbers.formatDecimal(liability.outstandingAmount, 1, 2)}">$0.00</dd>
+                                th:text="'₹' + ${#numbers.formatDecimal(liability.outstandingAmount, 1, 2)}">$0.00</dd>
 
                             <dt class="col-sm-4">Due Date:</dt>
                             <dd class="col-sm-8"
@@ -114,7 +114,7 @@
             <div class="card-body">
                 <div th:if="${liability.outstandingAmount > 0}">
                     <p>Outstanding amount: <strong
-                            th:text="'$' + ${#numbers.formatDecimal(liability.outstandingAmount, 1, 2)}"></strong></p>
+                            th:text="'₹' + ${#numbers.formatDecimal(liability.outstandingAmount, 1, 2)}"></strong></p>
                     <a th:href="@{/liabilities/payment/} + ${liability.id}" class="btn btn-success">
                         <i class="bi bi-cash"></i> Make Payment
                     </a>
@@ -146,7 +146,7 @@
                             <tbody>
                                 <tr th:each="transaction : ${liability.transactions}">
                                     <td th:text="${#temporals.format(transaction.createdAt, 'yyyy-MM-dd HH:mm')}">-</td>
-                                    <td th:text="'$' + ${#numbers.formatDecimal(transaction.amount, 1, 2)}">$0.00</td>
+                                    <td th:text="'₹' + ${#numbers.formatDecimal(transaction.amount, 1, 2)}">$0.00</td>
                                     <td th:text="${transaction.account?.accountName} ?: 'N/A'">-</td>
                                     <td th:text="${transaction.transactionType?.name} ?: 'N/A'">-</td>
                                     <td th:text="${transaction.description} ?: 'Liability payment'">-</td>

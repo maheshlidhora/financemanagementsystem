@@ -44,7 +44,7 @@
                         <div class="card-body d-flex flex-column justify-content-center">
                             <h5><i class="bi bi-receipt"></i> Expenses</h5>
                             <p class="display-6 text-danger"
-                                th:text="'$' + ${#numbers.formatDecimal(totalExpenses, 1, 2)}">$0.00</p>
+                                th:text="'₹' + ${#numbers.formatDecimal(totalExpenses, 1, 2)}">$0.00</p>
                         </div>
                     </div>
                 </a>
@@ -57,7 +57,7 @@
                         <div class="card-body d-flex flex-column justify-content-center">
                             <h5><i class="bi bi-credit-card"></i> Liabilities</h5>
                             <p class="display-6 text-warning"
-                                th:text="'$' + ${#numbers.formatDecimal(liabilitiesAmount, 1, 2)}">$0.00</p>
+                                th:text="'₹' + ${#numbers.formatDecimal(liabilitiesAmount, 1, 2)}">$0.00</p>
                         </div>
                     </div>
                 </a>
@@ -70,7 +70,7 @@
                         <div class="card-body d-flex flex-column justify-content-center">
                             <h5><i class="bi bi-cash-coin"></i> Loans</h5>
                             <p class="display-6 text-success"
-                                th:text="'$' + ${#numbers.formatDecimal(loansAmount, 1, 2)}">$0.00</p>
+                                th:text="'₹' + ${#numbers.formatDecimal(loansAmount, 1, 2)}">$0.00</p>
                         </div>
                     </div>
                 </a>
@@ -96,7 +96,7 @@
                             <tr th:each="account : ${recentAccounts}">
                                 <td th:text="${account.accountName}">Account Name</td>
                                 <td th:text="${account.accountType?.name} ?: 'N/A'">Type</td>
-                                <td th:text="'$' + ${#numbers.formatDecimal(account.currentBalance, 1, 2)}">$0.00</td>
+                                <td th:text="'₹' + ${#numbers.formatDecimal(account.currentBalance, 1, 2)}">$0.00</td>
                             </tr>
                             <tr th:if="${#lists.isEmpty(recentAccounts)}">
                                 <td colspan="3" class="text-center text-muted">No accounts available</td>

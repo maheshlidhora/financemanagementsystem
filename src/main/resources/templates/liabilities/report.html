@@ -150,7 +150,7 @@
         <div class="card bg-light mb-4">
             <div class="card-body text-center">
                 <h5>Total Outstanding Amount</h5>
-                <h2 class="text-danger" th:text="'$' + ${#numbers.formatDecimal(totalOutstanding,1,2)}">$0.00</h2>
+                <h2 class="text-danger" th:text="'₹' + ${#numbers.formatDecimal(totalOutstanding,1,2)}">$0.00</h2>
             </div>
         </div>
 
@@ -204,9 +204,9 @@
                                                    : 'bg-secondary')))}" th:text="${entry.key}"></span>
                                 </td>
                                 <td th:text="${statusCounts.get(entry.key)}">0</td>
-                                <td th:text="'$' + ${#numbers.formatDecimal(entry.value,1,2)}">$0.00</td>
+                                <td th:text="'₹' + ${#numbers.formatDecimal(entry.value,1,2)}">$0.00</td>
                                 <td
-                                    th:text="'$' + ${#numbers.formatDecimal(entry.value/statusCounts.get(entry.key),1,2)}">
+                                    th:text="'₹' + ${#numbers.formatDecimal(entry.value/statusCounts.get(entry.key),1,2)}">
                                     $0.00</td>
                             </tr>
                         </tbody>
@@ -245,10 +245,10 @@
                                                    : 'bg-secondary')))}" th:text="${liability.status}"></span>
                                 </td>
                                 <td th:text="${liability.account?.accountName} ?: 'N/A'">-</td>
-                                <td th:text="'$' + ${#numbers.formatDecimal(liability.amount,1,2)}">$0.00</td>
+                                <td th:text="'₹' + ${#numbers.formatDecimal(liability.amount,1,2)}">$0.00</td>
                                 <td><span class="fw-bold"
                                         th:classappend="${liability.status == 'OUTSTANDING' || liability.status == 'PARTIAL'} ? 'text-warning' : 'text-success'"
-                                        th:text="'$' + ${#numbers.formatDecimal(liability.outstandingAmount,1,2)}">$0.00</span>
+                                        th:text="'₹' + ${#numbers.formatDecimal(liability.outstandingAmount,1,2)}">$0.00</span>
                                 </td>
                             </tr>
                             <tr th:if="${#lists.isEmpty(liabilities)}">

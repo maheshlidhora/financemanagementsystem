@@ -34,7 +34,7 @@
         <div class="card bg-danger text-white mb-4">
             <div class="card-body text-center">
                 <h5 class="card-title">Total Overdue Amount</h5>
-                <h3 th:text="'$' + ${#numbers.formatDecimal(totalOverdue, 1, 2)}">$0.00</h3>
+                <h3 th:text="'₹' + ${#numbers.formatDecimal(totalOverdue, 1, 2)}">$0.00</h3>
                 <p class="mb-0" th:text="${overdueLiabilities.size()} + ' overdue liabilities'">0 overdue liabilities
                 </p>
             </div>
@@ -63,7 +63,7 @@
                                 <td th:text="${liability.description}">-</td>
                                 <td>
                                     <span class="fw-bold"
-                                        th:text="'$' + ${#numbers.formatDecimal(liability.amount, 1, 2)}">
+                                        th:text="'₹' + ${#numbers.formatDecimal(liability.amount, 1, 2)}">
                                         $0.00
                                     </span>
                                 </td>

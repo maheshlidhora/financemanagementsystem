@@ -156,9 +156,9 @@
                             <tr th:each="report : ${loanReports}">
                                 <td th:text="${report.category}">-</td>
                                 <td th:text="${report.count}">0</td>
-                                <td th:text="'$' + ${#numbers.formatDecimal(report.totalAmount, 1, 2)}">$0.00</td>
-                                <td th:text="'$' + ${#numbers.formatDecimal(report.outstandingAmount, 1, 2)}">$0.00</td>
-                                <td th:text="'$' + ${#numbers.formatDecimal(report.averageAmount, 1, 2)}">$0.00</td>
+                                <td th:text="'₹' + ${#numbers.formatDecimal(report.totalAmount, 1, 2)}">$0.00</td>
+                                <td th:text="'₹' + ${#numbers.formatDecimal(report.outstandingAmount, 1, 2)}">$0.00</td>
+                                <td th:text="'₹' + ${#numbers.formatDecimal(report.averageAmount, 1, 2)}">$0.00</td>
                             </tr>
                         </tbody>
                     </table>

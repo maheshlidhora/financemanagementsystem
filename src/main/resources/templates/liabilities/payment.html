@@ -55,10 +55,10 @@
 
                         <dt class="col-sm-3">Outstanding Amount:</dt>
                         <dd class="col-sm-9"
-                            th:text="'$' + ${#numbers.formatDecimal(liability.outstandingAmount, 1, 2)}">$0.00</dd>
+                            th:text="'₹' + ${#numbers.formatDecimal(liability.outstandingAmount, 1, 2)}">$0.00</dd>
 
                         <dt class="col-sm-3">Total Amount:</dt>
-                        <dd class="col-sm-9" th:text="'$' + ${#numbers.formatDecimal(liability.amount, 1, 2)}">$0.00
+                        <dd class="col-sm-9" th:text="'₹' + ${#numbers.formatDecimal(liability.amount, 1, 2)}">$0.00
                         </dd>
 
                         <dt class="col-sm-3">Status:</dt>

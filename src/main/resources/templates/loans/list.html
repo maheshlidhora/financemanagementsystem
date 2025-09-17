@@ -46,7 +46,7 @@
                 <div class="card bg-primary text-white">
                     <div class="card-body text-center">
                         <h5 class="card-title">Total Outstanding</h5>
-                        <h3 th:text="'$' + ${#numbers.formatDecimal(totalOutstanding, 1, 2)}">$0.00</h3>
+                        <h3 th:text="'₹' + ${#numbers.formatDecimal(totalOutstanding, 1, 2)}">$0.00</h3>
                     </div>
                 </div>
             </div>
@@ -54,7 +54,7 @@
                 <div class="card bg-success text-white">
                     <div class="card-body text-center">
                         <h5 class="card-title">Borrowed</h5>
-                        <h3 th:text="'$' + ${#numbers.formatDecimal(totalBorrowed, 1, 2)}">$0.00</h3>
+                        <h3 th:text="'₹' + ${#numbers.formatDecimal(totalBorrowed, 1, 2)}">$0.00</h3>
                     </div>
                 </div>
             </div>
@@ -62,7 +62,7 @@
                 <div class="card bg-info text-white">
                     <div class="card-body text-center">
                         <h5 class="card-title">Given</h5>
-                        <h3 th:text="'$' + ${#numbers.formatDecimal(totalGiven, 1, 2)}">$0.00</h3>
+                        <h3 th:text="'₹' + ${#numbers.formatDecimal(totalGiven, 1, 2)}">$0.00</h3>
                     </div>
                 </div>
             </div>
@@ -103,13 +103,13 @@
                                 <td th:text="${loan.description}">-</td>
                                 <td>
                                     <span class="fw-bold"
-                                        th:text="'$' + ${#numbers.formatDecimal(loan.principalAmount, 1, 2)}">
+                                        th:text="'₹' + ${#numbers.formatDecimal(loan.principalAmount, 1, 2)}">
                                         $0.00
                                     </span>
                                 </td>
                                 <td>
                                     <span class="fw-bold"
-                                        th:text="'$' + ${#numbers.formatDecimal(loan.outstandingAmount, 1, 2)}">
+                                        th:text="'₹' + ${#numbers.formatDecimal(loan.outstandingAmount, 1, 2)}">
                                         $0.00
                                     </span>
                                 </td>
